@@ -37,6 +37,21 @@ export default {
       });
     }
 
+    // /api/bg -> og-bg.png from og-radio bucket (for body background)
+    if (url.pathname === "/api/bg") {
+      const object = await env.MUSIC_BUCKET.get("og-bg.jpg");
+      if (!object) {
+        return new Response("Background not found", { status: 404 });
+      }
+      return new Response(object.body, {
+        headers: {
+          "Content-Type": "image/png",
+          "Cache-Control": "public, max-age=31536000, immutable",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+    }
+
     // 4) /api/tracks  -> JSON list of tracks
     if (url.pathname === "/api/tracks") {
       return Response.json(TRACKS, {

@@ -1,20 +1,16 @@
 // _worker.js - Cloudflare Pages Function
-// This handles ALL backend logic: API routes + R2 streaming
+// Handles HTML/asset serving + API routes + R2 streaming
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // ============================================================================
-    // Serve static assets (HTML, CSS, JS, images) from Pages
-    // ============================================================================
+    // 1) Serve static assets for non-API paths
     if (!url.pathname.startsWith("/api/")) {
       return env.ASSETS.fetch(request);
     }
 
-    // ============================================================================
-    // Handle CORS preflight
-    // ============================================================================
+    // 2) CORS preflight
     if (request.method === "OPTIONS") {
       return new Response(null, {
         headers: {
@@ -26,44 +22,56 @@ export default {
       });
     }
 
-    // ============================================================================
-    // API ROUTES
-    // ============================================================================
-
-    // GET /api/tracks - Return all tracks
-    if (url.pathname === "/api/tracks") {
-      return Response.json(TRACKS, {
+    // 3) /api/cover  -> cover.jpg from og-radio bucket
+    if (url.pathname === "/api/cover") {
+      const object = await env.MUSIC_BUCKET.get("cover.jpg");
+      if (!object) {
+        return new Response("Cover not found", { status: 404 });
+      }
+      return new Response(object.body, {
         headers: {
-          "Cache-Control": "public, max-age=86400", // Cache for 24 hours
+          "Content-Type": "image/jpeg",
+          "Cache-Control": "public, max-age=31536000, immutable",
           "Access-Control-Allow-Origin": "*",
         },
       });
     }
 
-    // GET /api/radio/current - Get current radio state
+    // 4) /api/tracks  -> JSON list of tracks
+    if (url.pathname === "/api/tracks") {
+      return Response.json(TRACKS, {
+        headers: {
+          "Cache-Control": "public, max-age=86400",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+    }
+
+    // 5) /api/radio/current  -> deterministic radio state
     if (url.pathname === "/api/radio/current") {
       const state = getCurrentRadioState();
       return Response.json(state, {
         headers: {
-          "Cache-Control": "public, max-age=5", // Cache for 5 seconds
+          "Cache-Control": "public, max-age=5",
           "Access-Control-Allow-Origin": "*",
         },
       });
     }
 
-    // GET /api/audio/:filename - Stream audio from R2
+    // 6) /api/audio/:filename  -> FLAC stream from R2 with cache
     if (url.pathname.startsWith("/api/audio/")) {
       return handleAudioStream(request, env);
     }
 
-    // 404 for other routes
+    // 7) Fallback 404
     return new Response("Not found", { status: 404 });
   },
 };
 
 // ============================================================================
-// TRACK CONFIGURATION - UPDATE WITH YOUR 40 TRACKS
+// TRACK CONFIGURATION - 40 TRACKS
 // ============================================================================
+
 const TRACKS = [
   {
     id: 1,
@@ -350,17 +358,14 @@ const TRACKS = [
 // ============================================================================
 // RADIO STATE CALCULATION
 // ============================================================================
+
 function getCurrentRadioState() {
   const now = Date.now();
 
-  // Calculate total playlist duration
   const totalDuration = TRACKS.reduce((sum, track) => sum + track.duration, 0);
-
-  // Calculate position in current loop
   const secondsSinceEpoch = Math.floor(now / 1000);
   const positionInCycle = secondsSinceEpoch % totalDuration;
 
-  // Find which track should be playing
   let elapsed = 0;
   let currentTrackIndex = 0;
   let trackStartOffset = 0;
@@ -390,30 +395,24 @@ function getCurrentRadioState() {
 // ============================================================================
 // AUDIO STREAMING WITH CACHING
 // ============================================================================
+
 async function handleAudioStream(request, env) {
   const url = new URL(request.url);
   const filename = url.pathname.replace("/api/audio/", "");
 
-  // Validate filename
   if (!filename || filename.includes("..")) {
     return new Response("Invalid filename", { status: 400 });
   }
 
-  // Check if track exists in our list
   const trackExists = TRACKS.some((t) => t.filename === filename);
   if (!trackExists) {
     return new Response("Track not found", { status: 404 });
   }
 
-  // ============================================================================
-  // CACHING LAYER - Cloudflare Cache API
-  // ============================================================================
   const cache = caches.default;
   const cacheKey = new Request(url.toString(), request);
 
-  // Try to get from cache first
   let response = await cache.match(cacheKey);
-
   if (response) {
     console.log(`✅ Cache HIT: ${filename}`);
     return addCorsHeaders(response);
@@ -421,31 +420,24 @@ async function handleAudioStream(request, env) {
 
   console.log(`❌ Cache MISS: ${filename} - Fetching from R2`);
 
-  // ============================================================================
-  // Fetch from R2
-  // ============================================================================
   try {
     const object = await env.MUSIC_BUCKET.get(filename);
-
     if (!object) {
       return new Response("File not found in R2", { status: 404 });
     }
 
-    // Create response with aggressive caching
     response = new Response(object.body, {
       headers: {
         "Content-Type": "audio/flac",
         "Content-Length": object.size,
-        "Cache-Control": "public, max-age=31536000, immutable", // Cache for 1 year
+        "Cache-Control": "public, max-age=31536000, immutable",
         "Accept-Ranges": "bytes",
         ETag: object.httpEtag,
         "Access-Control-Allow-Origin": "*",
       },
     });
 
-    // Store in Cloudflare Cache (99% reduction in R2 operations!)
     await cache.put(cacheKey, response.clone());
-
     return response;
   } catch (error) {
     console.error(`Error fetching ${filename} from R2:`, error);
@@ -454,13 +446,13 @@ async function handleAudioStream(request, env) {
 }
 
 // ============================================================================
-// HELPER FUNCTIONS
+// HELPER
 // ============================================================================
+
 function addCorsHeaders(response) {
   const newHeaders = new Headers(response.headers);
   newHeaders.set("Access-Control-Allow-Origin", "*");
   newHeaders.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
-
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,

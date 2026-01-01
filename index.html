@@ -1059,7 +1059,7 @@
         currentMode = "radio";
         if (radioUpdateInterval) clearInterval(radioUpdateInterval);
         updateRadioState();
-        radioUpdateInterval = setInterval(updateRadioState, 5000);
+        radioUpdateInterval = setInterval(updateRadioState, 10000);
       }
 
       async function updateRadioState() {
@@ -1074,6 +1074,14 @@
           if (!radioAudio.src.endsWith(expectedSrc)) {
             radioAudio.src = expectedSrc;
             radioAudio.currentTime = radioState.elapsed || 0;
+          } else {
+            // same track: only resync if drift is big
+            const drift = Math.abs(
+              radioAudio.currentTime - (radioState.elapsed || 0)
+            );
+            if (drift > 3) {
+              radioAudio.currentTime = radioState.elapsed || 0;
+            }
           }
 
           if (currentMode === "radio" && !radioPausedByUser) {

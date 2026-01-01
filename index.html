@@ -57,30 +57,10 @@
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           sans-serif;
-        background: var(--bg-primary); /* fallback solid color */
+        background: var(--bg-primary);
         color: var(--text-primary);
         min-height: 100vh;
         overflow-x: hidden;
-        /* background image from R2 */
-        background-image: url("/api/bg");
-        background-repeat: no-repeat;
-      }
-
-      /* Desktop / laptop: center horizontal, full viewport height */
-      @media (min-width: 768px) {
-        body {
-          background-position: center center;
-          background-size: auto 100vh; /* show full height, crop sides */
-          background-attachment: fixed; /* optional: parallax effect */
-        }
-      }
-
-      /* Mobile: full vertical frame, crop left/right */
-      @media (max-width: 767px) {
-        body {
-          background-position: center top; /* align from top */
-          background-size: cover; /* fill screen vertically */
-        }
       }
 
       .header {

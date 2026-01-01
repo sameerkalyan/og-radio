@@ -118,6 +118,18 @@
         animation: pulse 2s infinite;
       }
 
+      .radio-main-controls {
+        margin-top: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.25rem;
+      }
+
+      .radio-main-controls .volume-row {
+        flex: 0 1 260px;
+      }
+
       @keyframes pulse {
         0%,
         100% {
@@ -787,11 +799,9 @@
                   <button class="control-btn" id="nextBtn">⏭️</button>
                 </div>
 
-                <div class="controls-extra">
-                  <div class="left-controls">
-                    <button class="icon-btn" id="shuffleBtn">🔀</button>
-                    <button class="icon-btn" id="repeatBtn">🔁</button>
-                  </div>
+                <div class="radio-main-controls">
+                  <button class="control-btn play" id="playBtn">▶️</button>
+
                   <div class="volume-row">
                     <span class="volume-icon">🔊</span>
                     <input

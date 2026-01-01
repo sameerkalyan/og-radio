@@ -57,30 +57,10 @@
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           sans-serif;
-        background: var(--bg-primary); /* fallback solid color */
+        background: var(--bg-primary);
         color: var(--text-primary);
         min-height: 100vh;
         overflow-x: hidden;
-        /* background image from R2 */
-        background-image: url("/api/bg");
-        background-repeat: no-repeat;
-      }
-
-      /* Desktop / laptop: center horizontal, full viewport height */
-      @media (min-width: 768px) {
-        body {
-          background-position: center center;
-          background-size: auto 100vh; /* show full height, crop sides */
-          background-attachment: fixed; /* optional: parallax effect */
-        }
-      }
-
-      /* Mobile: full vertical frame, crop left/right */
-      @media (max-width: 767px) {
-        body {
-          background-position: center top; /* align from top */
-          background-size: cover; /* fill screen vertically */
-        }
       }
 
       .header {
@@ -452,18 +432,6 @@
         border: none;
       }
 
-      .radio-main-controls {
-        margin-top: 0.8rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1.25rem;
-      }
-
-      .radio-main-controls .volume-row {
-        flex: 0 1 260px;
-      }
-
       .browse-list-view {
         background: var(--bg-card);
         border-radius: 14px;
@@ -813,9 +781,17 @@
                   </div>
                 </div>
 
-                <div class="radio-main-controls">
+                <div class="controls-row">
+                  <button class="control-btn" id="prevBtn">⏮️</button>
                   <button class="control-btn play" id="playBtn">▶️</button>
+                  <button class="control-btn" id="nextBtn">⏭️</button>
+                </div>
 
+                <div class="controls-extra">
+                  <div class="left-controls">
+                    <button class="icon-btn" id="shuffleBtn">🔀</button>
+                    <button class="icon-btn" id="repeatBtn">🔁</button>
+                  </div>
                   <div class="volume-row">
                     <span class="volume-icon">🔊</span>
                     <input

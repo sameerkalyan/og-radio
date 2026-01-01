@@ -7,35 +7,13 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <meta name="theme-color" content="#0a0a0a" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta
-      name="apple-mobile-web-app-status-bar-style"
-      content="black-translucent"
-    />
 
     <title>OG Radio</title>
 
-    <!-- Logo / favicon from cover endpoint -->
+    <!-- Favicon from cover -->
     <link rel="icon" type="image/jpeg" href="/api/cover" />
-    <link rel="apple-touch-icon" href="/api/cover" />
-
-    <!-- Japanese-style font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Sawarabi+Gothic&family=Noto+Serif+JP:wght@700;900&display=swap"
-      rel="stylesheet"
-    />
 
     <style>
-      @font-face {
-        font-family: "StormGust";
-        src: url("/assets/fonts/Storm-Gust.ttf") format("truetype");
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-      }
-
       * {
         margin: 0;
         padding: 0;
@@ -50,7 +28,6 @@
         --text-primary: #ffffff;
         --text-secondary: #a0a0a0;
         --accent: #ff4444;
-        --accent-hover: #ff6666;
         --border: #242424;
       }
 
@@ -62,6 +39,8 @@
         min-height: 100vh;
         overflow-x: hidden;
       }
+
+      /* HEADER */
 
       .header {
         position: sticky;
@@ -88,13 +67,10 @@
       }
 
       .logo-text {
-        font-family: "StormGust", system-ui, -apple-system, BlinkMacSystemFont,
-          "Segoe UI", sans-serif;
         font-size: 26px;
-        font-weight: 600; /* or whatever looks right for that font */
+        font-weight: 900;
         color: var(--accent);
-        letter-spacing: 0px;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+        letter-spacing: 2px;
       }
 
       .live-badge {
@@ -115,20 +91,9 @@
         height: 8px;
         border-radius: 50%;
         background: var(--accent);
-        animation: pulse 2s infinite;
       }
 
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-          transform: scale(1);
-        }
-        50% {
-          opacity: 0.5;
-          transform: scale(0.9);
-        }
-      }
+      /* LAYOUT */
 
       .container {
         max-width: 1200px;
@@ -155,20 +120,15 @@
         font-weight: 600;
         cursor: pointer;
         border-bottom: 2px solid transparent;
-        transition: color 0.2s, border-color 0.2s;
       }
 
-      .nav-tab span {
+      .nav-tab span:first-child {
         font-size: 18px;
       }
 
       .nav-tab.active {
         color: var(--accent);
         border-bottom-color: var(--accent);
-      }
-
-      .nav-tab:hover {
-        color: var(--text-primary);
       }
 
       .views {
@@ -184,6 +144,8 @@
         display: block;
       }
 
+      /* NOW PLAYING CARD (used by radio + browse) */
+
       .now-playing-card {
         background: var(--bg-card);
         border-radius: 14px;
@@ -193,7 +155,6 @@
         margin: 0 auto;
         display: flex;
         flex-direction: column;
-        align-items: center;
         gap: 0.75rem;
       }
 
@@ -223,10 +184,6 @@
         gap: 6px;
       }
 
-      .np-header-mode span:first-child {
-        font-size: 15px;
-      }
-
       .np-layout {
         width: 100%;
         display: flex;
@@ -248,7 +205,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
         overflow: hidden;
       }
 
@@ -256,12 +212,7 @@
         width: 100%;
         height: 100%;
         object-fit: cover;
-        display: none;
-      }
-
-      .album-art-placeholder {
-        font-size: 60px;
-        color: #d7d7d7;
+        display: block;
       }
 
       .np-right {
@@ -304,7 +255,6 @@
         height: 100%;
         width: 0%;
         background: var(--accent);
-        transition: width 0.08s linear;
       }
 
       .time-display {
@@ -323,34 +273,17 @@
       }
 
       .control-btn {
-        width: 38px;
-        height: 38px;
+        width: 48px;
+        height: 48px;
         border-radius: 999px;
         border: none;
-        background: var(--bg-secondary);
-        color: var(--text-primary);
-        font-size: 18px;
+        background: var(--accent);
+        color: #fff;
+        font-size: 22px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: transform 0.15s, background 0.15s;
-      }
-
-      .control-btn.play {
-        width: 48px;
-        height: 48px;
-        background: var(--accent);
-        font-size: 22px;
-      }
-
-      .control-btn:hover {
-        background: #222;
-        transform: translateY(-1px);
-      }
-
-      .control-btn:active {
-        transform: translateY(0) scale(0.96);
       }
 
       .controls-extra {
@@ -359,36 +292,6 @@
         justify-content: space-between;
         gap: 1rem;
         margin-top: 0.45rem;
-      }
-
-      .left-controls {
-        display: flex;
-        gap: 0.6rem;
-      }
-
-      .icon-btn {
-        width: 30px;
-        height: 30px;
-        border-radius: 999px;
-        border: none;
-        background: var(--bg-secondary);
-        color: var(--text-secondary);
-        font-size: 14px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: background 0.15s, color 0.15s, transform 0.15s;
-      }
-
-      .icon-btn.active {
-        background: rgba(255, 68, 68, 0.2);
-        color: var(--accent);
-      }
-
-      .icon-btn:hover {
-        background: #222;
-        transform: translateY(-1px);
       }
 
       .volume-row {
@@ -415,7 +318,6 @@
 
       .volume-slider::-webkit-slider-thumb {
         -webkit-appearance: none;
-        appearance: none;
         width: 14px;
         height: 14px;
         border-radius: 50%;
@@ -423,14 +325,7 @@
         cursor: pointer;
       }
 
-      .volume-slider::-moz-range-thumb {
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        background: var(--accent);
-        cursor: pointer;
-        border: none;
-      }
+      /* BROWSE LIST + MINI PLAYER */
 
       .browse-list-view {
         background: var(--bg-card);
@@ -441,14 +336,13 @@
         margin: 0 auto;
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 0.5rem;
       }
 
       .browse-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.5rem;
         margin-bottom: 0.25rem;
       }
 
@@ -463,19 +357,9 @@
       }
 
       .track-list {
-        max-height: 420px;
+        flex: 1;
+        max-height: 360px;
         overflow-y: auto;
-      }
-
-      .track-list::-webkit-scrollbar {
-        width: 6px;
-      }
-      .track-list::-webkit-scrollbar-track {
-        background: #121212;
-      }
-      .track-list::-webkit-scrollbar-thumb {
-        background: #2b2b2b;
-        border-radius: 999px;
       }
 
       .track-item {
@@ -484,13 +368,7 @@
         padding: 0.6rem 0.55rem;
         border-radius: 10px;
         cursor: pointer;
-        transition: background 0.15s, transform 0.1s;
         margin-bottom: 2px;
-      }
-
-      .track-item:hover {
-        background: var(--bg-secondary);
-        transform: translateY(-1px);
       }
 
       .track-item.playing {
@@ -511,11 +389,6 @@
         font-weight: 600;
         margin-right: 10px;
         flex-shrink: 0;
-      }
-
-      .track-item.playing .track-number {
-        background: var(--accent);
-        color: #fff;
       }
 
       .track-details {
@@ -539,30 +412,41 @@
         flex-shrink: 0;
       }
 
-      .loading {
-        text-align: center;
-        padding: 2rem 0.5rem;
-        color: var(--text-secondary);
+      .mini-player {
+        margin-top: 0.4rem;
+        width: 100%;
+        border: none;
+        border-radius: 10px;
+        background: #202020;
+        padding: 0.55rem 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        color: var(--text-primary);
+      }
+
+      .mini-info {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+
+      .mini-title {
         font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
-      .loading-spinner {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        border: 3px solid #202020;
-        border-top-color: var(--accent);
-        margin: 0 auto 0.7rem;
-        animation: spin 1s linear infinite;
+      .mini-artist {
+        font-size: 12px;
+        color: var(--text-secondary);
       }
 
-      @keyframes spin {
-        0% {
-          transform: rotate(0);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
+      .mini-controls span {
+        font-size: 18px;
       }
 
       .np-back-btn {
@@ -577,22 +461,6 @@
         padding: 4px 0;
       }
 
-      .np-back-btn span:first-child {
-        font-size: 15px;
-      }
-
-      .np-back-btn:hover {
-        color: var(--text-primary);
-      }
-
-      .np-browse-label {
-        font-size: 13px;
-        color: var(--text-secondary);
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-      }
-
       @media (max-width: 900px) {
         .container {
           padding: 1rem 1rem 2rem;
@@ -600,43 +468,10 @@
 
         .np-layout {
           flex-direction: column;
-          align-items: stretch;
         }
 
         .np-art-wrapper {
           margin: 0 auto;
-        }
-
-        .np-right {
-          margin-top: 0.4rem;
-        }
-
-        .now-playing-card {
-          padding: 1rem 0.9rem 0.9rem;
-        }
-
-        .browse-list-view {
-          padding: 0.9rem 0.9rem 0.9rem;
-        }
-
-        .track-title {
-          font-size: 18px;
-        }
-      }
-
-      @media (max-width: 600px) {
-        .logo-text {
-          font-size: 22px;
-          letter-spacing: 1.4px;
-        }
-
-        .np-art-wrapper {
-          flex-basis: 220px;
-          max-width: 260px;
-        }
-
-        .np-layout {
-          gap: 0.9rem;
         }
       }
     </style>
@@ -657,33 +492,26 @@
     <main class="container">
       <div class="nav-tabs">
         <button class="nav-tab active" id="tabRadio">
-          <span>📻</span>
-          <span>Radio</span>
+          <span>📻</span><span>Radio</span>
         </button>
         <button class="nav-tab" id="tabBrowse">
-          <span>🎧</span>
-          <span>Browse</span>
+          <span>🎧</span><span>Browse</span>
         </button>
       </div>
 
       <div class="views">
         <!-- RADIO VIEW -->
         <section class="view active" id="viewRadio">
-          <div class="now-playing-card" id="radioNowPlayingCard">
+          <div class="now-playing-card">
             <div class="np-header">
               <div class="np-header-title">Now Playing</div>
-              <div class="np-header-mode">
-                <span>📻</span><span>Radio mode</span>
-              </div>
+              <div class="np-header-mode">Radio mode</div>
             </div>
 
             <div class="np-layout">
               <div class="np-art-wrapper">
                 <div class="album-art-box">
-                  <img id="albumArt" src="/api/cover" alt="Album Art" />
-                  <div class="album-art-placeholder" id="albumArtPlaceholder">
-                    🎧
-                  </div>
+                  <img src="/api/cover" alt="Album Art" />
                 </div>
               </div>
 
@@ -698,7 +526,7 @@
                 </div>
 
                 <div class="progress-section">
-                  <div class="progress-bar-container" id="progressContainer">
+                  <div class="progress-bar-container">
                     <div class="progress-bar" id="progressBar"></div>
                   </div>
                   <div class="time-display">
@@ -708,16 +536,11 @@
                 </div>
 
                 <div class="controls-row">
-                  <button class="control-btn" id="prevBtn">⏮️</button>
-                  <button class="control-btn play" id="playBtn">▶️</button>
-                  <button class="control-btn" id="nextBtn">⏭️</button>
+                  <button class="control-btn" id="playBtn">▶️</button>
                 </div>
 
                 <div class="controls-extra">
-                  <div class="left-controls">
-                    <button class="icon-btn" id="shuffleBtn">🔀</button>
-                    <button class="icon-btn" id="repeatBtn">🔁</button>
-                  </div>
+                  <div></div>
                   <div class="volume-row">
                     <span class="volume-icon">🔊</span>
                     <input
@@ -742,35 +565,35 @@
               <div class="browse-title">All Tracks</div>
               <div class="browse-count" id="trackCount">0 tracks</div>
             </div>
-            <div class="track-list" id="trackList">
-              <div class="loading">
-                <div class="loading-spinner"></div>
-                <div>Loading tracks…</div>
+
+            <div class="track-list" id="trackList"></div>
+
+            <button class="mini-player" id="miniPlayer">
+              <div class="mini-info">
+                <div class="mini-title" id="miniTitle">Not playing</div>
+                <div class="mini-artist" id="miniArtist"></div>
               </div>
-            </div>
+              <div class="mini-controls">
+                <span id="miniPlayIcon">▶️</span>
+              </div>
+            </button>
           </div>
         </section>
 
         <!-- BROWSE NOW PLAYING VIEW -->
         <section class="view" id="viewBrowseNowPlaying">
-          <div class="now-playing-card" id="browseNowPlayingCard">
+          <div class="now-playing-card">
             <div class="np-browse-header">
               <button class="np-back-btn" id="browseBackBtn">
                 <span>←</span><span>All tracks</span>
               </button>
-              <div class="np-browse-label">Browse mode</div>
+              <div>Browse mode</div>
             </div>
 
             <div class="np-layout">
               <div class="np-art-wrapper">
                 <div class="album-art-box">
-                  <img id="browseAlbumArt" src="/api/cover" alt="Album Art" />
-                  <div
-                    class="album-art-placeholder"
-                    id="browseAlbumArtPlaceholder"
-                  >
-                    🎧
-                  </div>
+                  <img src="/api/cover" alt="Album Art" />
                 </div>
               </div>
 
@@ -795,17 +618,12 @@
 
                 <div class="controls-row">
                   <button class="control-btn" id="browsePrevBtn">⏮️</button>
-                  <button class="control-btn play" id="browsePlayBtn">
-                    ▶️
-                  </button>
+                  <button class="control-btn" id="browsePlayBtn">▶️</button>
                   <button class="control-btn" id="browseNextBtn">⏭️</button>
                 </div>
 
                 <div class="controls-extra">
-                  <div class="left-controls">
-                    <button class="icon-btn" id="browseShuffleBtn">🔀</button>
-                    <button class="icon-btn" id="browseRepeatBtn">🔁</button>
-                  </div>
+                  <div></div>
                   <div class="volume-row">
                     <span class="volume-icon">🔊</span>
                     <input
@@ -838,34 +656,11 @@
       let radioState = {};
       let radioUpdateInterval = null;
       let radioPausedByUser = false;
-      let shuffleOn = false;
-      let repeatOn = false;
 
       const radioAudio = document.getElementById("radioAudio");
       const manualAudio = document.getElementById("manualAudio");
       const getCurrentAudio = () =>
         currentMode === "radio" ? radioAudio : manualAudio;
-
-      const tabRadio = document.getElementById("tabRadio");
-      const tabBrowse = document.getElementById("tabBrowse");
-
-      const playBtn = document.getElementById("playBtn");
-      const prevBtn = document.getElementById("prevBtn");
-      const nextBtn = document.getElementById("nextBtn");
-      const shuffleBtn = document.getElementById("shuffleBtn");
-      const repeatBtn = document.getElementById("repeatBtn");
-      const volumeSlider = document.getElementById("volumeSlider");
-
-      const browsePlayBtn = document.getElementById("browsePlayBtn");
-      const browsePrevBtn = document.getElementById("browsePrevBtn");
-      const browseNextBtn = document.getElementById("browseNextBtn");
-      const browseShuffleBtn = document.getElementById("browseShuffleBtn");
-      const browseRepeatBtn = document.getElementById("browseRepeatBtn");
-      const browseVolumeSlider = document.getElementById("browseVolumeSlider");
-      const browseBackBtn = document.getElementById("browseBackBtn");
-
-      const trackListEl = document.getElementById("trackList");
-      const trackCountEl = document.getElementById("trackCount");
 
       function showView(view) {
         currentView = view;
@@ -879,8 +674,12 @@
           .getElementById("viewBrowseNowPlaying")
           .classList.toggle("active", view === "browse-now-playing");
 
-        tabRadio.classList.toggle("active", view === "radio");
-        tabBrowse.classList.toggle("active", view !== "radio");
+        document
+          .getElementById("tabRadio")
+          .classList.toggle("active", view === "radio");
+        document
+          .getElementById("tabBrowse")
+          .classList.toggle("active", view !== "radio");
       }
 
       function navigate(view) {
@@ -894,55 +693,21 @@
         showView(view);
       });
 
-      function loadAlbumCover() {
-        // RADIO art
-        const img = document.getElementById("albumArt");
-        const placeholder = document.getElementById("albumArtPlaceholder");
-        img.onload = () => {
-          img.style.display = "block";
-          placeholder.style.display = "none";
-        };
-        img.onerror = () => {
-          img.style.display = "none";
-          placeholder.style.display = "block";
-        };
-        img.src = ALBUM_COVER_URL;
-
-        // BROWSE art
-        const bImg = document.getElementById("browseAlbumArt");
-        const bPlaceholder = document.getElementById(
-          "browseAlbumArtPlaceholder"
-        );
-        bImg.onload = () => {
-          bImg.style.display = "block";
-          bPlaceholder.style.display = "none";
-        };
-        bImg.onerror = () => {
-          bImg.style.display = "none";
-          bPlaceholder.style.display = "block";
-        };
-        bImg.src = ALBUM_COVER_URL;
-      }
-
       async function loadTracks() {
-        try {
-          const res = await fetch("/api/tracks");
-          tracks = await res.json();
-          trackCountEl.textContent = tracks.length + " tracks";
-          renderTrackList();
-        } catch (e) {
-          console.error("Failed to load tracks", e);
-          trackListEl.innerHTML =
-            '<div class="loading">Failed to load tracks</div>';
-        }
+        const res = await fetch("/api/tracks");
+        tracks = await res.json();
+        document.getElementById("trackCount").textContent =
+          tracks.length + " tracks";
+        renderTrackList();
       }
 
       function renderTrackList() {
+        const container = document.getElementById("trackList");
         if (!tracks.length) {
-          trackListEl.innerHTML = '<div class="loading">No tracks found</div>';
+          container.innerHTML = "<div>No tracks found</div>";
           return;
         }
-        trackListEl.innerHTML = tracks
+        container.innerHTML = tracks
           .map(
             (t, idx) => `
         <div class="track-item" data-index="${idx}">
@@ -968,9 +733,15 @@
         try {
           const res = await fetch("/api/radio/current");
           radioState = await res.json();
-
           const track = radioState.track;
-          updateRadioNowPlaying(track);
+
+          document.getElementById("currentTrackTitle").textContent =
+            track.title;
+          document.getElementById("currentTrackArtist").textContent =
+            track.artist;
+          document.getElementById("totalDuration").textContent = formatTime(
+            track.duration
+          );
 
           const expectedSrc = `/api/audio/${track.filename}`;
           if (!radioAudio.src.endsWith(expectedSrc)) {
@@ -981,25 +752,12 @@
           if (currentMode === "radio" && !radioPausedByUser) {
             radioAudio
               .play()
-              .then(() => {
-                playBtn.textContent = "⏸️";
-              })
-              .catch(() => {
-                playBtn.textContent = "▶️";
-              });
+              .then(() => (playBtn.textContent = "⏸️"))
+              .catch(() => (playBtn.textContent = "▶️"));
           }
         } catch (e) {
-          console.error("Radio state error", e);
+          console.error(e);
         }
-      }
-
-      function updateRadioNowPlaying(track) {
-        document.getElementById("currentTrackTitle").textContent = track.title;
-        document.getElementById("currentTrackArtist").textContent =
-          track.artist;
-        document.getElementById("totalDuration").textContent = formatTime(
-          track.duration
-        );
       }
 
       function startBrowseMode() {
@@ -1018,23 +776,17 @@
         manualAudio.src = `/api/audio/${track.filename}`;
         manualAudio
           .play()
-          .then(() => {
-            browsePlayBtn.textContent = "⏸️";
-          })
-          .catch(() => {
-            browsePlayBtn.textContent = "▶️";
-          });
+          .then(() => (browsePlayBtn.textContent = "⏸️"))
+          .catch(() => (browsePlayBtn.textContent = "▶️"));
 
         updateBrowseNowPlaying(track);
         highlightPlayingTrack();
+        updateMiniPlayer(track);
       }
 
       function updateBrowseNowPlaying(track) {
         document.getElementById("browseTrackTitle").textContent = track.title;
         document.getElementById("browseTrackArtist").textContent = track.artist;
-        document.getElementById("browseTotalDuration").textContent = formatTime(
-          track.duration
-        );
       }
 
       function highlightPlayingTrack() {
@@ -1048,32 +800,32 @@
 
       function playNextTrack() {
         if (!tracks.length) return;
-        if (shuffleOn) {
-          currentTrackIndex = Math.floor(Math.random() * tracks.length);
-        } else {
-          currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
-        }
+        currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
         selectTrack(currentTrackIndex);
       }
 
       function playPrevTrack() {
         if (!tracks.length) return;
-        if (shuffleOn) {
-          currentTrackIndex = Math.floor(Math.random() * tracks.length);
-        } else {
-          currentTrackIndex =
-            (currentTrackIndex - 1 + tracks.length) % tracks.length;
-        }
+        currentTrackIndex =
+          (currentTrackIndex - 1 + tracks.length) % tracks.length;
         selectTrack(currentTrackIndex);
+      }
+
+      function updateMiniPlayer(track) {
+        const t = track || tracks[currentTrackIndex];
+        if (!t) return;
+        document.getElementById("miniTitle").textContent = t.title;
+        document.getElementById("miniArtist").textContent = t.artist;
+        document.getElementById("miniPlayIcon").textContent = manualAudio.paused
+          ? "▶️"
+          : "⏸️";
       }
 
       function togglePlay() {
         const audio = getCurrentAudio();
 
         if (audio.paused) {
-          if (currentMode === "radio") {
-            radioPausedByUser = false;
-          }
+          if (currentMode === "radio") radioPausedByUser = false;
           audio
             .play()
             .then(() => {
@@ -1081,6 +833,7 @@
                 playBtn.textContent = "⏸️";
               } else {
                 browsePlayBtn.textContent = "⏸️";
+                updateMiniPlayer();
               }
             })
             .catch(() => {});
@@ -1090,31 +843,64 @@
             playBtn.textContent = "▶️";
           } else {
             browsePlayBtn.textContent = "▶️";
+            updateMiniPlayer();
           }
           audio.pause();
         }
       }
 
-      function setupEventListeners() {
-        tabRadio.addEventListener("click", () => {
+      function updateRadioProgress() {
+        if (!radioAudio.duration) return;
+        const p = (radioAudio.currentTime / radioAudio.duration) * 100;
+        document.getElementById("progressBar").style.width = p + "%";
+        document.getElementById("currentTime").textContent = formatTime(
+          radioAudio.currentTime
+        );
+        document.getElementById("totalDuration").textContent = formatTime(
+          radioAudio.duration
+        );
+      }
+
+      function updateBrowseProgress() {
+        if (!manualAudio.duration) return;
+        const p = (manualAudio.currentTime / manualAudio.duration) * 100;
+        document.getElementById("browseProgressBar").style.width = p + "%";
+        document.getElementById("browseCurrentTime").textContent = formatTime(
+          manualAudio.currentTime
+        );
+        document.getElementById("browseTotalDuration").textContent = formatTime(
+          manualAudio.duration
+        );
+      }
+
+      function formatTime(sec) {
+        if (!isFinite(sec)) return "0:00";
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60)
+          .toString()
+          .padStart(2, "0");
+        return `${m}:${s}`;
+      }
+
+      const playBtn = document.getElementById("playBtn");
+      const browsePlayBtn = document.getElementById("browsePlayBtn");
+
+      function setupEvents() {
+        document.getElementById("tabRadio").addEventListener("click", () => {
           manualAudio.pause();
           browsePlayBtn.textContent = "▶️";
-
           currentMode = "radio";
           radioPausedByUser = true;
           navigate("radio");
           startRadioMode();
         });
 
-        tabBrowse.addEventListener("click", () => {
-          radioAudio.pause();
-          playBtn.textContent = "▶️";
-
+        document.getElementById("tabBrowse").addEventListener("click", () => {
           startBrowseMode();
           navigate("browse-list");
         });
 
-        trackListEl.addEventListener("click", (e) => {
+        document.getElementById("trackList").addEventListener("click", (e) => {
           const item = e.target.closest(".track-item");
           if (!item) return;
           const index = Number(item.getAttribute("data-index"));
@@ -1123,21 +909,13 @@
           navigate("browse-now-playing");
         });
 
-        browseBackBtn.addEventListener("click", () => {
-          navigate("browse-list");
-        });
+        document
+          .getElementById("browseBackBtn")
+          .addEventListener("click", () => navigate("browse-list"));
 
         playBtn.addEventListener("click", () => {
           currentMode = "radio";
           togglePlay();
-        });
-
-        prevBtn.addEventListener("click", () => {
-          // radio prev not implemented (global stream)
-        });
-
-        nextBtn.addEventListener("click", () => {
-          // radio next not implemented (global stream)
         });
 
         browsePlayBtn.addEventListener("click", () => {
@@ -1145,40 +923,32 @@
           togglePlay();
         });
 
-        browsePrevBtn.addEventListener("click", playPrevTrack);
-        browseNextBtn.addEventListener("click", playNextTrack);
+        document
+          .getElementById("browsePrevBtn")
+          .addEventListener("click", playPrevTrack);
+        document
+          .getElementById("browseNextBtn")
+          .addEventListener("click", playNextTrack);
 
-        const shuffleButtons = [shuffleBtn, browseShuffleBtn];
-        const repeatButtons = [repeatBtn, browseRepeatBtn];
+        document.getElementById("miniPlayer").addEventListener("click", () => {
+          if (!tracks.length) return;
+          navigate("browse-now-playing");
+        });
 
-        shuffleButtons.forEach((btn) =>
-          btn.addEventListener("click", () => {
-            shuffleOn = !shuffleOn;
-            shuffleButtons.forEach((b) =>
-              b.classList.toggle("active", shuffleOn)
-            );
-          })
-        );
-
-        repeatButtons.forEach((btn) =>
-          btn.addEventListener("click", () => {
-            repeatOn = !repeatOn;
-            repeatButtons.forEach((b) =>
-              b.classList.toggle("active", repeatOn)
-            );
-          })
-        );
-
-        function handleVolumeInput(e) {
-          const volume = e.target.value / 100;
-          radioAudio.volume = volume;
-          manualAudio.volume = volume;
-          volumeSlider.value = e.target.value;
-          browseVolumeSlider.value = e.target.value;
+        function handleVolume(e) {
+          const vol = e.target.value / 100;
+          radioAudio.volume = vol;
+          manualAudio.volume = vol;
+          document.getElementById("volumeSlider").value = e.target.value;
+          document.getElementById("browseVolumeSlider").value = e.target.value;
         }
 
-        volumeSlider.addEventListener("input", handleVolumeInput);
-        browseVolumeSlider.addEventListener("input", handleVolumeInput);
+        document
+          .getElementById("volumeSlider")
+          .addEventListener("input", handleVolume);
+        document
+          .getElementById("browseVolumeSlider")
+          .addEventListener("input", handleVolume);
 
         document
           .getElementById("browseProgressContainer")
@@ -1199,60 +969,18 @@
           });
 
           audio.addEventListener("ended", () => {
-            if (currentMode === "browse") {
-              if (repeatOn) {
-                manualAudio.currentTime = 0;
-                manualAudio.play();
-              } else {
-                playNextTrack();
-              }
+            if (audio === manualAudio) {
+              playNextTrack();
             }
           });
         });
       }
 
-      function updateRadioProgress() {
-        const a = radioAudio;
-        if (!a.duration) return;
-        const progress = (a.currentTime / a.duration) * 100;
-        document.getElementById("progressBar").style.width = progress + "%";
-        document.getElementById("currentTime").textContent = formatTime(
-          a.currentTime
-        );
-        document.getElementById("totalDuration").textContent = formatTime(
-          a.duration
-        );
-      }
-
-      function updateBrowseProgress() {
-        const a = manualAudio;
-        if (!a.duration) return;
-        const progress = (a.currentTime / a.duration) * 100;
-        document.getElementById("browseProgressBar").style.width =
-          progress + "%";
-        document.getElementById("browseCurrentTime").textContent = formatTime(
-          a.currentTime
-        );
-        document.getElementById("browseTotalDuration").textContent = formatTime(
-          a.duration
-        );
-      }
-
-      function formatTime(sec) {
-        if (!isFinite(sec)) return "0:00";
-        const m = Math.floor(sec / 60);
-        const s = Math.floor(sec % 60)
-          .toString()
-          .padStart(2, "0");
-        return `${m}:${s}`;
-      }
-
       async function init() {
         history.replaceState({ view: "radio" }, "", "#radio");
         showView("radio");
-        loadAlbumCover();
         await loadTracks();
-        setupEventListeners();
+        setupEvents();
         startRadioMode();
       }
 
